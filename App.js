@@ -9,6 +9,8 @@ import {
   FlatList,
   SafeAreaView,
   Image,
+  SectionList,
+  ScrollView,
 } from 'react-native';
 
 const ArrayExample = () => {
@@ -180,12 +182,6 @@ const FlatListExample = () => {
     { id: 1, value: 'eggs' },
     { id: 2, value: 'milk' },
     { id: 3, value: 'bread' },
-    { id: 1, value: 'eggs' },
-    { id: 2, value: 'milk' },
-    { id: 3, value: 'bread' },
-    { id: 1, value: 'eggs' },
-    { id: 2, value: 'milk' },
-    { id: 3, value: 'bread' },
   ];
   const [shoppingList, setShoppingList] = useState(shoppingListArray);
 
@@ -234,11 +230,73 @@ const FlatListExample = () => {
   );
 };
 
+const SectionListExample = () => {
+  const data = [
+    { heading: 'Dairy', data: ['Milk', 'Yoghurt'] },
+    { heading: 'Carbs', data: ['Bread', 'Pasta', 'Rice'] },
+  ];
+  const [array, setArray] = useState(data);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text>Items in your cart:</Text>
+      <View style={{ flex: 0.4, width: '60%' }}>
+        <SectionList
+          sections={array}
+          renderItem={(itemData) => {
+            console.log('item data: ', itemData);
+            return (
+              <Text>
+                {itemData.item} of {itemData.section.heading}
+              </Text>
+            );
+          }}
+          renderSectionHeader={({ section: { heading } }) => (
+            <Text style={{ fontWeight: 'bold' }}>{heading}</Text>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const NetworkDataExample = () => {
+  const [data, setData] = useState([]);
+
+  const fetchData = () => {
+    fetch('https://jsonplaceholder.typicode.com/todos')
+      .then((response) => response.json())
+      .then((json) => {
+        console.log('json results:', json);
+        let dataResults = [];
+        json.forEach((item) => {
+          let result = { title: item.title };
+          dataResults.push(result);
+        });
+        setData(dataResults);
+      });
+  };
+  return (
+    <SafeAreaView style={styles.container}>
+      <Button title="Fetch Data" onPress={fetchData} />
+
+      <FlatList
+        data={data}
+        renderItem={({ item }) => <Text>{item.title}</Text>}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    </SafeAreaView>
+  );
+};
+
 export default function App() {
   // return <ArrayExample />;
   // return <TextInputArrayExample />;
   // return <MapExample />;
-  return <FlatListExample />;
+  // return <FlatListExample />;
+  // return <SectionListExample />;
+  return <NetworkDataExample />;
 }
 
 const styles = StyleSheet.create({
