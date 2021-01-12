@@ -268,10 +268,10 @@ const NetworkDataExample = () => {
     fetch('https://jsonplaceholder.typicode.com/todos')
       .then((response) => response.json())
       .then((json) => {
-        console.log('json results:', json);
+        // console.log('json results:', json);
         let dataResults = [];
         json.forEach((item) => {
-          let result = { title: item.title };
+          let result = { title: item.title, id: item.id };
           dataResults.push(result);
         });
         setData(dataResults);
@@ -284,7 +284,7 @@ const NetworkDataExample = () => {
       <FlatList
         data={data}
         renderItem={({ item }) => <Text>{item.title}</Text>}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item.id.toString()}
       />
     </SafeAreaView>
   );
